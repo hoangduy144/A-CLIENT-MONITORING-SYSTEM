@@ -241,7 +241,7 @@ public class WatchServer {
     	clientRowSorter = new TableRowSorter<>(listClient.getModel());
     	listClient.setRowSorter(clientRowSorter);
 		JScrollPane clientScroller = new JScrollPane(listClient);
-		clientScroller.setBounds(642, 53, 228, 278);
+		clientScroller.setBounds(450, 54, 228, 278);
 		frame.getContentPane().add(clientScroller);
 		
 		
@@ -316,19 +316,6 @@ public class WatchServer {
 				showTree(selectedClient);
 			}
 		});
-    	
-    	btnChange.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (tree != null && tree.isSelectionEmpty() == false) {
-					String pathString = tree.getSelectionPath().getLastPathComponent().toString();
-					String selectedClient = listClient.getValueAt(listClient.getSelectedRow(), 0).toString();
-					roomHash.get(selectedClient).changeFolder(pathString);
-					folderFrame.setVisible(false);
-				}
-			}
-		});
     }
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -380,20 +367,20 @@ public class WatchServer {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("IP");
-		lblNewLabel.setBounds(59, 54, 61, 16);
+		lblNewLabel.setBounds(200, 170, 61, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblPortText = new JLabel("PORT");
-		lblPortText.setBounds(59, 74, 61, 16);
+		lblPortText.setBounds(200, 190, 61, 16);
 		frame.getContentPane().add(lblPortText);
 		
 		lblIP = new JLabel("123456789");
 		lblIP.setBackground(new Color(255, 255, 0));
-		lblIP.setBounds(121, 54, 166, 16);
+		lblIP.setBounds(262, 170, 100, 16);
 		frame.getContentPane().add(lblIP);
 		
 		lblPort = new JLabel("123456789");
-		lblPort.setBounds(121, 74, 166, 16);
+		lblPort.setBounds(262, 190, 100, 16);
 		frame.getContentPane().add(lblPort);
 			
 		tableLog = new JTable();
@@ -403,11 +390,8 @@ public class WatchServer {
 		
 		btnDirChange = new JButton("Show Folder");
 		btnDirChange.setEnabled(false);
-		btnDirChange.setBounds(753, 339, 117, 29);
+		btnDirChange.setBounds(725, 54, 120, 29);
 		frame.getContentPane().add(btnDirChange);
-		
-		btnChange = new JButton("Change");
-		btnChange.setBounds(638, 339, 78, 29);
-		frame.getContentPane().add(btnChange);
+
 	}
 }
