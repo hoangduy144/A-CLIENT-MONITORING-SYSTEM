@@ -41,13 +41,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import model.Action;
-import client.ActionData;
-import model.FileTreeModel;
-
-import client.ClientData;
-import client.ClientHandler;
-import client.IClientAction;
+import main.Action;
+import main.ActionData;
+import main.FileTreeModel;
 
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -81,7 +77,7 @@ public class WatchServer {
 	//static ServerSocket variable
     private static ServerSocket server;
     //socket server port on which it will listen
-    private static int PORT = 4072;
+    private static int PORT = 9876;
     
     private Thread connectingThread = null;
     
@@ -123,7 +119,7 @@ public class WatchServer {
 			          //create ObjectOutputStream object
 			            
 			            //write object to Socket
-			            oos.writeObject(new ServerActionData(Action.SERVER_LOGIN_RESPONSE, "Accepted."));
+			            oos.writeObject(new ServerActionData(Action.SERVER_LOGIN_RESPONSE, "Hello, you're accepted."));
 			            startCommunicateEnvironment(clientIP, socket, ois, oos);
 		            }
 		        }
@@ -242,7 +238,7 @@ public class WatchServer {
     	clientRowSorter = new TableRowSorter<>(listClient.getModel());
     	listClient.setRowSorter(clientRowSorter);
 		JScrollPane clientScroller = new JScrollPane(listClient);
-		clientScroller.setBounds(450, 54, 228, 278);
+		clientScroller.setBounds(642, 53, 228, 278);
 		frame.getContentPane().add(clientScroller);
 		
 		
@@ -294,9 +290,61 @@ public class WatchServer {
 	}
     
     private void setupFilterEvents() {
+		textFieldLogcatFilter.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				String text = textFieldLogcatFilter.getText();
+				if (text.trim().length() == 0) {
+					rowSorter.setRowFilter(null);
+				} else {
+					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+				}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				String text = textFieldLogcatFilter.getText();
+				if (text.trim().length() == 0) {
+					rowSorter.setRowFilter(null);
+				} else {
+					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				
+			}
+		});
 		
-		
-		
+		textFieldClient.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				String text = textFieldClient.getText();
+				if (text.trim().length() == 0) {
+					clientRowSorter.setRowFilter(null);
+				} else {
+					clientRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+				}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				String text = textFieldClient.getText();
+				if (text.trim().length() == 0) {
+					clientRowSorter.setRowFilter(null);
+				} else {
+					clientRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				
+			}
+		});
 	}
     
     private void generateServerConnectionInfo() {
@@ -314,7 +362,20 @@ public class WatchServer {
     }
     
     private void handleClickEvents() {
-    	
+    	btnStop.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (btnStop.getText().equals("Stop Server")) {
+					stopConnection();
+					btnStop.setText("Start Server");
+				} else {
+					suspendConnecting();
+					btnStop.setText("Stop Server");
+				}
+			}
+    		
+    	});
     	
     	btnDirChange.addActionListener(new ActionListener() {
 			
@@ -396,35 +457,58 @@ public class WatchServer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		JLabel lblIntro = new JLabel("Use this port, IP to connect your client...");
+		lblIntro.setBounds(16, 17, 284, 25);
+		frame.getContentPane().add(lblIntro);
+		
 		JLabel lblNewLabel = new JLabel("IP");
-		lblNewLabel.setBounds(200, 170, 61, 16);
+		lblNewLabel.setBounds(59, 54, 61, 16);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblPortText = new JLabel("PORT");
-		lblPortText.setBounds(200, 190, 61, 16);
+		lblPortText.setBounds(59, 74, 61, 16);
 		frame.getContentPane().add(lblPortText);
 		
 		lblIP = new JLabel("123456789");
 		lblIP.setBackground(new Color(255, 255, 0));
-		lblIP.setBounds(262, 170, 100, 16);
+		lblIP.setBounds(121, 54, 166, 16);
 		frame.getContentPane().add(lblIP);
 		
 		lblPort = new JLabel("123456789");
-		lblPort.setBounds(262, 190, 100, 16);
+		lblPort.setBounds(121, 74, 166, 16);
 		frame.getContentPane().add(lblPort);
-			
+		
+		lblLogcat = new JLabel("Logcat Filter");
+		lblLogcat.setBounds(6, 352, 101, 16);
+		frame.getContentPane().add(lblLogcat);
+		
+		btnStop = new JButton("Stop Server");
+		btnStop.setEnabled(false);
+		btnStop.setBounds(69, 102, 117, 29);
+		frame.getContentPane().add(btnStop);
+		
 		tableLog = new JTable();
 		JScrollPane listScroller = new JScrollPane(tableLog);
 		listScroller.setBounds(6, 380, 864, 312);
 		frame.getContentPane().add(listScroller);
 		
+		textFieldClient = new JTextField();
+		textFieldClient.setBounds(642, 16, 228, 26);
+		frame.getContentPane().add(textFieldClient);
+		textFieldClient.setColumns(10);
+		
 		btnDirChange = new JButton("Show Folder");
 		btnDirChange.setEnabled(false);
-		btnDirChange.setBounds(725, 104, 120, 29);
+		btnDirChange.setBounds(753, 339, 117, 29);
 		frame.getContentPane().add(btnDirChange);
 		
+		textFieldLogcatFilter = new JTextField();
+		textFieldLogcatFilter.setBounds(100, 347, 251, 26);
+		frame.getContentPane().add(textFieldLogcatFilter);
+		textFieldLogcatFilter.setColumns(10);
+		
 		btnChange = new JButton("Change");
-		btnChange.setBounds(725, 54, 120, 29);
+		btnChange.setBounds(638, 339, 78, 29);
 		frame.getContentPane().add(btnChange);
 	}
 }
