@@ -232,7 +232,6 @@ public class WatchClient {
 			        WatchKey key = null;
 			        while (true) {
 			            try {
-			                // System.out.println("Waiting for key to be signalled...");
 			                key = watcher.take();
 			            } catch (InterruptedException ex) {
 			                System.out.println("InterruptedException: " + ex.getMessage());
@@ -241,12 +240,10 @@ public class WatchClient {
 			            
 			            List<WatchEvent<?>> events = key.pollEvents();
 			            for (WatchEvent<?> event : events) {
-			                // Retrieve the type of event by using the kind() method.
 			                WatchEvent.Kind<?> kind = event.kind();
 			                WatchEvent<Path> ev = (WatchEvent<Path>) event;
 			                Path filePath = ev.context();
 			                
-			                //(new File(absPath.toString() + "/")).isDirectory();
 			                String fileName = filePath.toString().replace(".", ",");
 			                int splitResult = fileName.split(",").length;
 			                boolean isFile = fileName.contains(",") && splitResult == 2;
@@ -337,7 +334,6 @@ public class WatchClient {
 			            }
 			        }
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -388,10 +384,8 @@ public class WatchClient {
 					try {
 						sendActionToServer(message);
 					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -445,9 +439,7 @@ public class WatchClient {
 		
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 713, 537);
@@ -492,7 +484,6 @@ public class WatchClient {
 	
 	private static final String LOGCAT_FILENAME = "client_logcat.txt";
 	private static final String LOGCAT_PARENT_PATH = System.getProperty("user.home") + "/FolderObserver/logcat/client/";
-	//establish socket connection to server
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private Socket socket;
