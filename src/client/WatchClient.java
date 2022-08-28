@@ -48,36 +48,9 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 
 public class WatchClient {
-
-	private JFrame frame;
-	private JTextField textIP;
-	private JTextField textPort;
-	private JLabel lblStatus;
-	private JButton btnConnect;
-	private Hashtable<String, Thread> threadHolder = new Hashtable<String, Thread>();
-	private Hashtable<String, WatchService> watcherHolder = new Hashtable<String, WatchService>();
-	private DefaultTableModel tableModel = new DefaultTableModel(0, 0);
-	
-	private static final String LOGCAT_FILENAME = "client_logcat.txt";
-	private static final String LOGCAT_PARENT_PATH = System.getProperty("user.home") + "/FolderObserver/logcat/client/";
-	
-	//establish socket connection to server
-	private ObjectOutputStream oos;
-	private ObjectInputStream ois;
-	private Socket socket;
-	private String ip;
-	private JTable tableLog = new JTable();
-	private TableRowSorter<TableModel> rowSorter;
-	private JTextField textFieldLogFilter;
-	private String currentPathObserving = "";
-	private Thread receiverThread;
-	
 	private FileTreeModel folderModel = new FileTreeModel(new File(System.getProperty("user.home")));
 	static final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -100,11 +73,7 @@ public class WatchClient {
 			if (!f.exists()) {
 				f.createNewFile();
 			}
-			//PrintWriter writer = new PrintWriter(new File(loader.getResource(filePath).getFile()));
-			//writer.append(line);
-			//writer.append("\n");
-			//writer.close();
-			
+                        
 			FileWriter fw = new FileWriter(filePath + LOGCAT_FILENAME, isAppend);
 			fw.write(line);
 			fw.write("\n");
@@ -187,7 +156,6 @@ public class WatchClient {
 			        		break;
 			        	}
 					} catch (ClassNotFoundException | IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 		        	
@@ -202,11 +170,6 @@ public class WatchClient {
 		System.out.println("disconnect");
 		receiverThread.interrupt();
 		if (socket.isConnected()) {
-			//if (oos != null && ois != null) {
-			//	oos.close();
-			//	ois.close();
-			//}
-			
 			ois = null;
 			oos = null;
 			btnConnect.setText("Connect");
@@ -217,7 +180,6 @@ public class WatchClient {
 	private void initFolderObersever() {
 		int defaultPosition = 15;
 		JTree tree = new JTree(folderModel);
-		//System.out.print(tree.getPathForRow(defaultPosition).getLastPathComponent());
 		File file = new File(tree.getPathForRow(defaultPosition).getLastPathComponent().toString());
 		while (!file.isDirectory()) {
 			file = new File(tree.getPathForRow(++defaultPosition).getLastPathComponent().toString());
@@ -225,15 +187,12 @@ public class WatchClient {
 		String parent = file.getParent();
 		System.out.println("current: " + file.getPath() + ", currentAbsolute: " + file.getAbsolutePath() + ", parent=" + parent);
 		currentPathObserving = file.getPath();
-		// register parent path
 		registerFolder(parent, true);
-		// register current
 		registerFolder(file.getPath(), false);
 		
 	}
 	
 	private void startNewRegisterFolder(String path) {
-		// disconnect old watchers
 		threadHolder.forEach((dir, thread) -> {
 			thread.interrupt();
 		});
@@ -248,9 +207,7 @@ public class WatchClient {
 		File file = new File(path);
 		String parent = file.getParent();
 		currentPathObserving = file.getPath();
-		// register parent path
 		registerFolder(parent, true);
-		// register current
 		registerFolder(file.getPath(), false);
 	}
 	
@@ -456,13 +413,15 @@ public class WatchClient {
 	}
 	
 	private void initLogTable() {
-		String[] header = new String[] { "No.", "Time", "Action"};
+		String[] header = new String[] { "No.", "Time", "Action", "Description"};
 		tableModel.setColumnIdentifiers(header);
 		tableLog.setModel(tableModel);
 		rowSorter = new TableRowSorter<>(tableLog.getModel());
+		tableLog.setRowSorter(rowSorter);
 	}
 	
 	private void setupFilterEvents() {
+		
 	}
 	
 	private void addRowLog(ActionData action) {
@@ -517,14 +476,31 @@ public class WatchClient {
 		btnConnect.setBounds(282, 135, 117, 29);
 		frame.getContentPane().add(btnConnect);
 		
-		
-		lblStatus = new JLabel("Requesting...");
-		lblStatus.setBounds(254, 176, 184, 16);
-		frame.getContentPane().add(lblStatus);
-		
 		JScrollPane tableScroller = new JScrollPane(tableLog);
 		tableScroller.setBounds(6, 240, 701, 263);
 		frame.getContentPane().add(tableScroller);
 		
 	}
+        private JFrame frame;
+	private JTextField textIP;
+	private JTextField textPort;
+	private JLabel lblStatus;
+	private JButton btnConnect;
+	private Hashtable<String, Thread> threadHolder = new Hashtable<String, Thread>();
+	private Hashtable<String, WatchService> watcherHolder = new Hashtable<String, WatchService>();
+	private DefaultTableModel tableModel = new DefaultTableModel(0, 0);
+	
+	private static final String LOGCAT_FILENAME = "client_logcat.txt";
+	private static final String LOGCAT_PARENT_PATH = System.getProperty("user.home") + "/FolderObserver/logcat/client/";
+	//establish socket connection to server
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private Socket socket;
+	private String ip;
+	private JTable tableLog = new JTable();
+	private TableRowSorter<TableModel> rowSorter;
+	private JTextField textFieldLogFilter;
+	private String currentPathObserving = "";
+	private Thread receiverThread;
+	
 }

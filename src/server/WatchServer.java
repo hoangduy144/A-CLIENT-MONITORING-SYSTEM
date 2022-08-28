@@ -81,7 +81,7 @@ public class WatchServer {
 	//static ServerSocket variable
     private static ServerSocket server;
     //socket server port on which it will listen
-    private static int PORT = 4073;
+    private static int PORT = 4072;
     
     private Thread connectingThread = null;
     
@@ -228,10 +228,11 @@ public class WatchServer {
     }
     
     private void initLogTable() {
-		String[] header = new String[] { "No.", "Client IP", "Time", "Action"};
+		String[] header = new String[] { "No.", "Client IP", "Time", "Action", "Description"};
 		logModel.setColumnIdentifiers(header);
 		tableLog.setModel(logModel);
 		rowSorter = new TableRowSorter<>(tableLog.getModel());
+		tableLog.setRowSorter(rowSorter);
 	}
     
     private void initClientTable() {
@@ -276,6 +277,11 @@ public class WatchServer {
     
     private void writeLog(String filePath, String line, boolean isAppend) {
 		try {
+			//PrintWriter writer = new PrintWriter(new File(loader.getResource(filePath).getFile()));
+			//writer.append(line);
+			//writer.append("\n");
+			//writer.close();
+			
 			FileWriter fw = new FileWriter(filePath + LOGCAT_FILENAME, isAppend);
 			fw.write(line);
 			fw.write("\n");
@@ -287,7 +293,10 @@ public class WatchServer {
 		}
 	}
     
-    private void setupFilterEvents() {	
+    private void setupFilterEvents() {
+		
+		
+		
 	}
     
     private void generateServerConnectionInfo() {
@@ -330,6 +339,10 @@ public class WatchServer {
 			}
 		});
     }
+    
+	/**
+	 * Launch the application.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -342,6 +355,10 @@ public class WatchServer {
 			}
 		});
 	}
+
+	/**
+	 * Create the application.
+	 */
 	public WatchServer() {
 		initialize();
 		generateServerConnectionInfo();
