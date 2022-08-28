@@ -2,7 +2,7 @@ package server;
 
 import java.io.Serializable;
 
-import main.Action;
+import model.Action;
 
 public class ServerActionData implements Serializable {
 	String action;
