@@ -456,41 +456,13 @@ public class WatchClient {
 	}
 	
 	private void initLogTable() {
-		String[] header = new String[] { "No.", "Time", "Action", "Description"};
+		String[] header = new String[] { "No.", "Time", "Action"};
 		tableModel.setColumnIdentifiers(header);
 		tableLog.setModel(tableModel);
 		rowSorter = new TableRowSorter<>(tableLog.getModel());
-		tableLog.setRowSorter(rowSorter);
 	}
 	
 	private void setupFilterEvents() {
-		textFieldLogFilter.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				String text = textFieldLogFilter.getText();
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = textFieldLogFilter.getText();
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				
-			}
-		});
 	}
 	
 	private void addRowLog(ActionData action) {
@@ -545,26 +517,14 @@ public class WatchClient {
 		btnConnect.setBounds(282, 135, 117, 29);
 		frame.getContentPane().add(btnConnect);
 		
-		JLabel lblNewLabel_1 = new JLabel("Let's connect to your server");
-		lblNewLabel_1.setBounds(254, 46, 184, 16);
-		frame.getContentPane().add(lblNewLabel_1);
 		
 		lblStatus = new JLabel("Requesting...");
 		lblStatus.setBounds(254, 176, 184, 16);
 		frame.getContentPane().add(lblStatus);
 		
-		//frame.getContentPane().add(tableLog);
 		JScrollPane tableScroller = new JScrollPane(tableLog);
 		tableScroller.setBounds(6, 240, 701, 263);
 		frame.getContentPane().add(tableScroller);
 		
-		JLabel lblNewLabel_2 = new JLabel("Logcat Filter");
-		lblNewLabel_2.setBounds(6, 214, 88, 16);
-		frame.getContentPane().add(lblNewLabel_2);
-		
-		textFieldLogFilter = new JTextField();
-		textFieldLogFilter.setBounds(87, 209, 301, 26);
-		frame.getContentPane().add(textFieldLogFilter);
-		textFieldLogFilter.setColumns(10);
 	}
 }

@@ -316,6 +316,19 @@ public class WatchServer {
 				showTree(selectedClient);
 			}
 		});
+    	
+    	btnChange.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (tree != null && tree.isSelectionEmpty() == false) {
+					String pathString = tree.getSelectionPath().getLastPathComponent().toString();
+					String selectedClient = listClient.getValueAt(listClient.getSelectedRow(), 0).toString();
+					roomHash.get(selectedClient).changeFolder(pathString);
+					folderFrame.setVisible(false);
+				}
+			}
+		});
     }
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -390,8 +403,11 @@ public class WatchServer {
 		
 		btnDirChange = new JButton("Show Folder");
 		btnDirChange.setEnabled(false);
-		btnDirChange.setBounds(725, 54, 120, 29);
+		btnDirChange.setBounds(725, 104, 120, 29);
 		frame.getContentPane().add(btnDirChange);
-
+		
+		btnChange = new JButton("Change");
+		btnChange.setBounds(725, 54, 120, 29);
+		frame.getContentPane().add(btnChange);
 	}
 }
