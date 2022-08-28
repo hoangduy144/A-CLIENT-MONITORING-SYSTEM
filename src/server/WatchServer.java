@@ -276,11 +276,6 @@ public class WatchServer {
     
     private void writeLog(String filePath, String line, boolean isAppend) {
 		try {
-			//PrintWriter writer = new PrintWriter(new File(loader.getResource(filePath).getFile()));
-			//writer.append(line);
-			//writer.append("\n");
-			//writer.close();
-			
 			FileWriter fw = new FileWriter(filePath + LOGCAT_FILENAME, isAppend);
 			fw.write(line);
 			fw.write("\n");
@@ -292,62 +287,7 @@ public class WatchServer {
 		}
 	}
     
-    private void setupFilterEvents() {
-		textFieldLogcatFilter.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				String text = textFieldLogcatFilter.getText();
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = textFieldLogcatFilter.getText();
-				if (text.trim().length() == 0) {
-					rowSorter.setRowFilter(null);
-				} else {
-					rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				
-			}
-		});
-		
-		textFieldClient.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				String text = textFieldClient.getText();
-				if (text.trim().length() == 0) {
-					clientRowSorter.setRowFilter(null);
-				} else {
-					clientRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				String text = textFieldClient.getText();
-				if (text.trim().length() == 0) {
-					clientRowSorter.setRowFilter(null);
-				} else {
-					clientRowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-				}
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				
-			}
-		});
+    private void setupFilterEvents() {	
 	}
     
     private void generateServerConnectionInfo() {
@@ -390,10 +330,6 @@ public class WatchServer {
 			}
 		});
     }
-    
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -406,10 +342,6 @@ public class WatchServer {
 			}
 		});
 	}
-
-	/**
-	 * Create the application.
-	 */
 	public WatchServer() {
 		initialize();
 		generateServerConnectionInfo();
@@ -447,10 +379,6 @@ public class WatchServer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblIntro = new JLabel("Use this port, IP to connect your client...");
-		lblIntro.setBounds(16, 17, 284, 25);
-		frame.getContentPane().add(lblIntro);
-		
 		JLabel lblNewLabel = new JLabel("IP");
 		lblNewLabel.setBounds(59, 54, 61, 16);
 		frame.getContentPane().add(lblNewLabel);
@@ -467,30 +395,16 @@ public class WatchServer {
 		lblPort = new JLabel("123456789");
 		lblPort.setBounds(121, 74, 166, 16);
 		frame.getContentPane().add(lblPort);
-		
-		
-		
-		
-		
+			
 		tableLog = new JTable();
 		JScrollPane listScroller = new JScrollPane(tableLog);
 		listScroller.setBounds(6, 380, 864, 312);
 		frame.getContentPane().add(listScroller);
 		
-		textFieldClient = new JTextField();
-		textFieldClient.setBounds(642, 16, 228, 26);
-		frame.getContentPane().add(textFieldClient);
-		textFieldClient.setColumns(10);
-		
 		btnDirChange = new JButton("Show Folder");
 		btnDirChange.setEnabled(false);
 		btnDirChange.setBounds(753, 339, 117, 29);
 		frame.getContentPane().add(btnDirChange);
-		
-		textFieldLogcatFilter = new JTextField();
-		textFieldLogcatFilter.setBounds(100, 347, 251, 26);
-		frame.getContentPane().add(textFieldLogcatFilter);
-		textFieldLogcatFilter.setColumns(10);
 		
 		btnChange = new JButton("Change");
 		btnChange.setBounds(638, 339, 78, 29);
